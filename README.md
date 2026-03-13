@@ -1,27 +1,32 @@
-# Junior Backend Developer - Technical Test: Task Manager API
+# Junior Backend Developer - Technical Test: Task Manager Full-Stack
 
-A robust RESTful API built with Node.js and Express to help teams record, organize, and manage daily tasks with full user authentication and database relations.
+A robust Full-Stack Task Management application built with Node.js, Express, and React to help teams record, organize, and manage daily tasks with full user authentication and database relations.
 
 ## 📌 Project Overview
 
-This project implements a task management system where users can register, login, and manage their personal tasks. It features a one-to-many relationship between Users and Tasks, ensuring data integrity and security through JWT authentication.
+This project implements a task management system where users can register, login, and manage their personal tasks through a modern web interface. It features a one-to-many relationship between Users and Tasks, ensuring data integrity and security through JWT authentication.
 
 ## 🛠 Tech Stack
 
+### Backend
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: PostgreSQL
 - **ORM**: Prisma
 - **Authentication**: JWT (JSON Web Token)
-- **Validation**: express-validator
-- **Testing**: Jest & Supertest
-- **Containerization**: Docker & Docker Compose
+
+### Frontend
+- **Framework**: React 18
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **State Management**: React Context API
 
 ## 🚀 Installation & Setup
 
 ### 1. Prerequisites
-- Docker & Docker Compose installed
-- Node.js (v18+) installed (if running locally)
+- Node.js (v18+) installed
+- PostgreSQL instance running
 
 ### 2. Clone & Setup Environment
 ```bash
@@ -30,20 +35,24 @@ cd TaskManagerApi
 cp .env.example .env
 ```
 
-### 3. Running with Docker (Recommended)
-This will start both the PostgreSQL database and the Express application:
+### 3. Build & Run (Single Command)
+The project is configured to build both the backend and frontend together:
 ```bash
-docker-compose up --build
+npm run build
+npm start
 ```
-The API will be accessible at `http://localhost:8080`.
+The application will be accessible at `http://localhost:8080`.
 
-### 4. Running Locally
-If you prefer to run without Docker:
-1. Ensure a PostgreSQL instance is running and update `DATABASE_URL` in `.env`.
-2. Install dependencies: `npm install`
-3. Generate Prisma client: `npx prisma generate`
-4. Push schema to DB: `npx prisma db push`
-5. Start server: `npm start`
+---
+
+## 🖥 Frontend Interface
+
+The application includes a clean, responsive interface with the following features:
+- **Auth Pages**: Toggle between Login and Register.
+- **Dashboard**: View your personalized task list.
+- **Task Management**: Create new tasks, edit existing ones, and delete with confirmation.
+- **Task Actions**: Quickly toggle task completion status and view priority levels.
+- **Persistent Session**: JWT is stored securely in `localStorage` to keep you logged in.
 
 ---
 

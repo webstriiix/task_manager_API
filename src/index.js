@@ -5,24 +5,30 @@ const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
+const path = require('path');
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client-dist')));
+
+app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'Task Manager API is running',
-    endpoints: {
-      users: '/users',
-      tasks: '/tasks'
-    }
+    message: 'Task Manager API is running'
   });
 });
 
 app.use('/users', userRoutes);
 app.use('/tasks', taskRoutes);
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client-dist/index.html'));
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
