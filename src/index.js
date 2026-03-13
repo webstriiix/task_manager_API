@@ -13,6 +13,20 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the React app
 const clientDistPath = path.resolve(process.cwd(), 'client-dist');
+const indexPath = path.join(clientDistPath, 'index.html');
+
+// Debugging logs for startup
+const fs = require('fs');
+console.log('--- Startup Directory Check ---');
+console.log('Current Working Directory:', process.cwd());
+console.log('Target Client Dist Path:', clientDistPath);
+console.log('Client Dist Exists:', fs.existsSync(clientDistPath));
+if (fs.existsSync(clientDistPath)) {
+  console.log('Index.html Exists:', fs.existsSync(indexPath));
+  console.log('Directory Contents:', fs.readdirSync(clientDistPath));
+}
+console.log('-------------------------------');
+
 app.use(express.static(clientDistPath));
 
 app.get('/api/health', (req, res) => {
@@ -28,7 +42,18 @@ app.use('/tasks', taskRoutes);
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(clientDistPath, 'index.html'));
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Frontend files not found. Please ensure the build command was successful.',
+      debug: {
+        cwd: process.cwd(),
+        path: indexPath
+      }
+    });
+  }
 });
 
 app.use((err, req, res, next) => {

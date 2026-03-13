@@ -21,7 +21,7 @@ RUN cd client && npm run build
 # 4. Copy backend source code
 COPY src/ ./src/
 
-# 5. Final check of build output location
+# 5. FINAL CHECK: Confirm files are in /app/client-dist
 RUN ls -la /app/client-dist && ls -la /app/client-dist/index.html
 
 EXPOSE 8080
@@ -29,5 +29,5 @@ EXPOSE 8080
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# Use 'npx prisma db push' to ensure database readiness
+# Use 'npx prisma db push' for database sync
 CMD ["sh", "-c", "npx prisma db push && node src/index.js"]
