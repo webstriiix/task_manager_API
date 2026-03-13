@@ -12,7 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client-dist')));
+const clientDistPath = path.resolve(process.cwd(), 'client-dist');
+app.use(express.static(clientDistPath));
 
 app.get('/api/health', (req, res) => {
   res.json({
@@ -27,7 +28,7 @@ app.use('/tasks', taskRoutes);
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client-dist/index.html'));
+  res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
 app.use((err, req, res, next) => {
