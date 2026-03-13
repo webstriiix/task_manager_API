@@ -1,29 +1,33 @@
+# Stage 1: Build the frontend
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app/client
+COPY client/package*.json ./
+RUN npm install
+COPY client/ ./
+RUN npm run build
+
+# Stage 2: Build the backend and final image
 FROM node:20-alpine
-
-# Install OpenSSL and libc6-compat for Prisma
 RUN apk add --no-cache openssl libc6-compat
-
 WORKDIR /app
 
-# 1. Install root dependencies
+# Copy root package files and install production dependencies
 COPY package*.json ./
 RUN npm install
 
-# 2. Install client dependencies
-COPY client/package*.json ./client/
-RUN cd client && npm install
-
-# 3. Copy Prisma schema and generate client
+# Copy Prisma schema and generate client
 COPY prisma ./prisma/
 RUN npx prisma generate
 
-# 4. Copy the rest of the source code
-COPY . .
+# Copy the rest of the backend source code
+COPY src/ ./src/
 
-# 5. Build the React frontend
-RUN cd client && npm run build
+# Copy the built frontend from Stage 1
+# Note: vite.config.js is configured to output to '../client-dist' relative to client/
+COPY --from=frontend-builder /app/client-dist ./client-dist
 
 EXPOSE 8080
 
-# Run migrations and start the server
-CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
+# Use a shorter CMD to avoid shell issues and ensure PORT is respected
+# If you are on Leapcell, you may want to use npx prisma db push instead of migrate deploy for first time
+CMD ["sh", "-c", "npx prisma db push && npm start"]
