@@ -4,7 +4,7 @@
   "description": "Task Manager API - Simple task management with user authentication",
   "main": "src/index.js",
   "scripts": {
-    "start": "cd client && npm install && npm run build && cd .. && node src/index.js",
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "build": "npm install && npx prisma generate && cd client && npm install && npm run build",
     "test": "NODE_ENV=test jest --coverage --runInBand",
